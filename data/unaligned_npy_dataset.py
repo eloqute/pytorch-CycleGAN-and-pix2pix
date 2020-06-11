@@ -3,6 +3,7 @@ from data.base_dataset import BaseDataset
 # from data.image_folder import make_dataset
 import numpy as np
 import random
+import torchvision.transforms as transforms
 
 NPY_EXTENSIONS = ['.np', '.npy', '.NP', '.NPY']
 
@@ -70,6 +71,10 @@ class UnalignedNpyDataset(BaseDataset):
         B_path = self.B_paths[index_B]
         A = np.load(A_path)
         B = np.load(B_path)
+
+	# Change to 3D single channel
+        A = transforms.ToTensor(A)
+        B = transforms.ToTensor(B)
 
         return {'A': A, 'B': B, 'A_paths': A_path, 'B_paths': B_path}
 
