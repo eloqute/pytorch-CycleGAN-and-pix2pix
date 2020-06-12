@@ -24,6 +24,13 @@ def make_dataset(dir, max_dataset_size=float("inf")):
     return images[:min(max_dataset_size, len(images))]
 
 
+def minmax_scale_to_01(x):
+    min = np.min(x)
+    max = np.max(x)
+    if max == min:
+        return x
+    return (x - min) / (max - min)
+
 class UnalignedNpyDataset(BaseDataset):
     """
     This dataset class loads unaligned/unpaired datasets of .npy files, which must be  1-channel (2 dimensional) arrays,
@@ -71,6 +78,10 @@ class UnalignedNpyDataset(BaseDataset):
         B_path = self.B_paths[index_B]
         A = np.load(A_path)
         B = np.load(B_path)
+
+        # Scale/clamp to [0,1)
+        A = minmax_scale_to_01(A)
+        B = minmax_scale_to_01(B)
 
         # Change to 3D single channel
         A = np.expand_dims(A, axis=1)
