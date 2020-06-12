@@ -76,8 +76,13 @@ class UnalignedNpyDataset(BaseDataset):
         else:  # randomize the index for domain B to avoid fixed pairs.
             index_B = random.randint(0, self.B_size - 1)
         B_path = self.B_paths[index_B]
+
         A = np.load(A_path)
         B = np.load(B_path)
+
+        # Convert to float32 (e.g. down from float64, not meant to be used on np.int8)
+        A = A.astype(np.float32)
+        B = B.astype(np.float32)
 
         # Scale/clamp to [0,1)
         A = minmax_scale_to_01(A)
@@ -86,7 +91,7 @@ class UnalignedNpyDataset(BaseDataset):
         # Change to 3D single channel
         A = np.expand_dims(A, axis=2)
         B = np.expand_dims(B, axis=2)
-        
+
         # print(A.shape)
         # convert to tensor
 
