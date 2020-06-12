@@ -84,9 +84,10 @@ class UnalignedNpyDataset(BaseDataset):
         B = minmax_scale_to_01(B)
 
         # Change to 3D single channel
-        A = np.expand_dims(A, axis=1)
-        B = np.expand_dims(B, axis=1)
-
+        A = np.expand_dims(A, axis=2)
+        B = np.expand_dims(B, axis=2)
+        
+        # print(A.shape)
         # convert to tensor
 
         transform_list = transforms.Compose([transforms.ToTensor()])
